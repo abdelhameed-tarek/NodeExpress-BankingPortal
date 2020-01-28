@@ -8,10 +8,37 @@ app.set("view engine", "ejs");
 
 app.use(express.static(path.join(__dirname, "public")));
 
+const accountData = fs.readFileSync(
+  path.join(__dirname, "json", "accounts.json"),
+  "utf8"
+);
+const accounts = JSON.parse(accountData);
 
-app.get('/',(req,resp)=>{
-    resp.render('index',{title:'index'})
-})
+const userData = fs.readFileSync(
+  path.join(__dirname, "json", "users.json"),
+  "utf8"
+);
 
+const users = JSON.parse(userData);
 
-app.listen(3000, ()=>console.log('PS project running on port 3000'))
+app.get("/", (req, resp) => {
+  resp.render("index", { title: "Account summary", accounts });
+});
+
+app.get("/savings", (req, resp) => {
+  resp.render("account", { account: accounts.savings });
+});
+
+app.get("/checking", (req, resp) => {
+  resp.render("account", { account: accounts.checking });
+});
+
+app.get("/credit", (req, resp) => {
+  resp.render("account", { account: accounts.credit });
+});
+
+app.get("/profile", (req, resp) => {
+  resp.render("profile", { user: users[0] });
+});
+
+app.listen(3000, () => console.log("PS project running on port 3000"));
